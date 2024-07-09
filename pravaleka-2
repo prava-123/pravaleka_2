@@ -1,0 +1,160 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+// Main class for Student Grade Tracker
+public class StudentGradeTracker {
+    
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        List<Student> students = new ArrayList<>();
+        
+        while (true) {
+            System.out.println("Student Grade Tracker");
+            System.out.println("1. Add Student");
+            System.out.println("2. Add Grades");
+            System.out.println("3. View Student Information");
+            System.out.println("4. Exit");
+            System.out.print("Enter your choice: ");
+            
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+            
+            switch (choice) {
+                case 1:
+                    addStudent(scanner, students);
+                    break;
+                case 2:
+                    addGrades(scanner, students);
+                    break;
+                case 3:
+                    viewStudentInformation(scanner, students);
+                    break;
+                case 4:
+                    System.out.println("Exiting...");
+                    scanner.close();
+                    return;
+                default:
+                    System.out.println("Invalid choice. Please enter again.");
+            }
+            
+            System.out.println(); // Empty line for readability
+        }
+    }
+    
+    // Method to add a new student
+    private static void addStudent(Scanner scanner, List<Student> students) {
+        System.out.print("Enter student name: ");
+        String name = scanner.nextLine();
+        
+        Student student = new Student(name);
+        students.add(student);
+        
+        System.out.println("Student added successfully.");
+    }
+    
+    // Method to add grades for a student
+    private static void addGrades(Scanner scanner, List<Student> students) {
+        if (students.isEmpty()) {
+            System.out.println("No students added yet. Please add a student first.");
+            return;
+        }
+        
+        System.out.println("Select a student:");
+        for (int i = 0; i < students.size(); i++) {
+            System.out.println((i + 1) + ". " + students.get(i).getName());
+        }
+        
+        System.out.print("Enter student number: ");
+        int studentNumber = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+        
+        if (studentNumber < 1 || studentNumber > students.size()) {
+            System.out.println("Invalid student number. Please try again.");
+            return;
+        }
+        
+        Student student = students.get(studentNumber - 1);
+        
+        System.out.print("Enter number of subjects: ");
+        int numSubjects = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+        
+        for (int i = 0; i < numSubjects; i++) {
+            System.out.print("Enter grade for subject " + (i + 1) + ": ");
+            double grade = scanner.nextDouble();
+            scanner.nextLine(); // Consume newline
+            
+            student.addGrade(grade);
+        }
+        
+        System.out.println("Grades added successfully.");
+    }
+    
+    // Method to view student information
+    private static void viewStudentInformation(Scanner scanner, List<Student> students) {
+        if (students.isEmpty()) {
+            System.out.println("No students added yet. Please add a student first.");
+            return;
+        }
+        
+        System.out.println("Select a student:");
+        for (int i = 0; i < students.size(); i++) {
+            System.out.println((i + 1) + ". " + students.get(i).getName());
+        }
+        
+        System.out.print("Enter student number: ");
+        int studentNumber = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+        
+        if (studentNumber < 1 || studentNumber > students.size()) {
+            System.out.println("Invalid student number. Please try again.");
+            return;
+        }
+        
+        Student student = students.get(studentNumber - 1);
+        
+        System.out.println("Student Name: " + student.getName());
+        System.out.println("Grades:");
+        student.printGrades();
+        System.out.println("Average Grade: " + student.calculateAverageGrade());
+    }
+}
+
+// Class representing a student
+class Student {
+    private String name;
+    private List<Double> grades;
+
+    public Student(String name) {
+        this.name = name;
+        this.grades = new ArrayList<>();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void addGrade(double grade) {
+        grades.add(grade);
+    }
+
+    public void printGrades() {
+        for (int i = 0; i < grades.size(); i++) {
+            System.out.println("Subject " + (i + 1) + ": " + grades.get(i));
+        }
+    }
+
+    public double calculateAverageGrade() {
+        if (grades.isEmpty()) {
+            return 0.0;
+        }
+
+        double sum = 0;
+        for (Double grade : grades) {
+            sum += grade;
+        }
+
+        return sum / grades.size();
+    }
+}
